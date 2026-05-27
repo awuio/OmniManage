@@ -32,7 +32,8 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        //
+        // Redirect back-end 'show' request to the public single blog post view
+        return redirect()->route('blog.show', $post);
     }
 
     public function edit(Post $post)

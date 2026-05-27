@@ -20,9 +20,10 @@ class ShopController extends Controller
                 $query->where('category_id', request('category_id'));
             })
             ->latest()
-            ->paginate(12);
+            ->paginate(8);
 
-        $popularProducts = Product::orderBy('views', 'desc')
+        $popularProducts = Product::with('category')
+            ->orderBy('views', 'desc')
             ->take(10)
             ->get();
 
@@ -32,8 +33,7 @@ class ShopController extends Controller
     // หน้าแสดงรายละเอียดสินค้า "ทีละ 1 ชิ้น"
     public function show(Product $product)
     {
-        $product->timestamps = false;
-        $product->increment('views');
+        $product->incrementViews();
 
         // Fetch up to 10 related products from the same category, excluding the current product
         $relatedProducts = Product::where('category_id', $product->category_id)

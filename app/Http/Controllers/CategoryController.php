@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -28,17 +29,11 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
-        ]);
+        Category::create($request->validated());
 
-        Category::create([
-            'name' => $request->name,
-        ]);
-
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('success', 'สร้างหมวดหมู่ใหม่สำเร็จเรียบร้อยแล้ว');
     }
 
     /**
@@ -52,17 +47,11 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,'.$category->id,
-        ]);
+        $category->update($request->validated());
 
-        $category->update([
-            'name' => $request->name,
-        ]);
-
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('success', 'อัปเดตข้อมูลหมวดหมู่สำเร็จเรียบร้อยแล้ว');
     }
 
     /**

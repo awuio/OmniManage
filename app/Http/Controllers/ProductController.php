@@ -18,18 +18,24 @@ class ProductController extends Controller
     {
         $categories = Category::all();
 
+        // Build the base query with eager-loaded category to avoid N+1
         $query = Product::with('category');
 
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // คำนวณค่าสถิติจากสินค้าที่ตรงตามเงื่อนไข (ก่อนทำการแบ่งหน้า)
-        $totalProductsCount = $query->count();
-        $totalQuantitySum = $query->sum('quantity');
-        $totalStockValueSum = $query->sum(\Illuminate\Support\Facades\DB::raw('price * quantity'));
+        // Clone the builder before running aggregates so each call
+        // gets a clean query without carrying over previous state.
+        // withoutEagerLoads() prevents the cloned with('category') from firing
+        // an unnecessary relationship query on a pure-aggregate result.
+        $stats = (clone $query)->withoutEagerLoads()->selectRaw('count(*) as total_count, sum(quantity) as total_qty, sum(price * quantity) as total_value')->first();
 
-        // แบ่งหน้าละ 10 รายการ และคงค่า Query String (เช่น category_id) ในลิงก์เปลี่ยนหน้า
+        $totalProductsCount = $stats->total_count;
+        $totalQuantitySum = $stats->total_qty;
+        $totalStockValueSum = $stats->total_value;
+
+        // Paginate and preserve the query string (e.g. category_id) in pagination links
         $products = $query->paginate(10)->withQueryString();
 
         return view('products.index', compact(
@@ -57,14 +63,28 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $data = $request->validated();
+        $uploadedImage = null;
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+        try {
+            if ($request->hasFile('image')) {
+                // Store the uploaded image first
+                $uploadedImage = $request->file('image')->store('products', 'public');
+                $data['image'] = $uploadedImage;
+            }
+
+            Product::create($data);
+
+            return redirect()->route('products.index')->with('success', 'สร้างสินค้าใหม่สำเร็จเรียบร้อยแล้ว');
+        } catch (\Exception $e) {
+            // Clean up the uploaded image from disk storage if database record creation fails
+            if ($uploadedImage) {
+                Storage::disk('public')->delete($uploadedImage);
+            }
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูลสินค้า: '.$e->getMessage());
         }
-
-        Product::create($data);
-
-        return redirect()->route('products.index');
     }
 
     /**
@@ -72,7 +92,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return redirect()->route('shop.show', $product);
     }
 
     /**
@@ -90,30 +110,39 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        // 1. ดึงข้อมูลที่ผ่านการ Validate มาเก็บไว้
         $validated = $request->validated();
+        $oldImage = $product->image;
+        $newImageUploaded = null;
 
-        // 2. ตรวจสอบว่ามีการอัปโหลดไฟล์รูปภาพ "ใหม่" เข้ามาหรือไม่
-        if ($request->hasFile('image')) {
-
-            // 2.1 ถ้ามีรูปภาพเดิมอยู่แล้ว ให้ลบออกจากโฟลเดอร์เพื่อประหยัดพื้นที่
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+        try {
+            if ($request->hasFile('image')) {
+                // Upload new image first, but do not delete old one yet (database integrity)
+                $newImageUploaded = $request->file('image')->store('products', 'public');
+                $validated['image'] = $newImageUploaded;
+            } else {
+                // Prevent over-writing old image with null when no new image is uploaded
+                unset($validated['image']);
             }
 
-            // 2.2 อัปโหลดรูปภาพใหม่ และนำ Path ที่ได้ไปแทนที่ใน Array
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            // Update database record
+            $product->update($validated);
 
-        } else {
-            // 2.3 ถ้า "ไม่มี" การอัปโหลดรูปใหม่ ให้ถอดคีย์ image ออกจาก Array
-            // เพื่อป้องกันไม่ให้ระบบนำค่า null ไปเขียนทับ Path รูปเดิมในฐานข้อมูล
-            unset($validated['image']);
+            // If database update succeeds, delete old image to free disk space
+            if ($newImageUploaded && $oldImage) {
+                Storage::disk('public')->delete($oldImage);
+            }
+
+            return redirect()->route('products.index')->with('success', 'อัปเดตข้อมูลสินค้าสำเร็จ');
+        } catch (\Exception $e) {
+            // Clean up the new uploaded image from disk storage if database update fails
+            if ($newImageUploaded) {
+                Storage::disk('public')->delete($newImageUploaded);
+            }
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'เกิดข้อผิดพลาดในการอัปเดตข้อมูลสินค้า: '.$e->getMessage());
         }
-
-        // 3. อัปเดตข้อมูลทั้งหมดลงฐานข้อมูลในครั้งเดียว
-        $product->update($validated);
-
-        return redirect()->route('products.index')->with('success', 'อัปเดตข้อมูลสินค้าสำเร็จ');
     }
 
     /**
@@ -126,6 +155,6 @@ class ProductController extends Controller
         }
         $product->delete();
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', 'ลบสินค้าสำเร็จเรียบร้อยแล้ว');
     }
 }

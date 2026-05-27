@@ -1,96 +1,88 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Post') }}
-        </h2>
+        <div class="flex items-center gap-2 text-sm text-zinc-500">
+            <a href="{{ route('posts.index') }}" class="hover:text-zinc-900 transition-colors">Posts</a>
+            <span>/</span>
+            <span class="text-zinc-900 font-medium">Edit Post</span>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xs sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-900">Edit Post</h3>
-                        <p class="text-sm text-gray-500 mt-1">Modify your article and update its information.</p>
-                    </div>
+    <div class="py-8">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white border border-zinc-200 rounded-lg">
+                <!-- Card Header -->
+                <div class="px-6 py-4 border-b border-zinc-200">
+                    <h3 class="text-sm font-semibold text-zinc-900">Edit Post</h3>
+                    <p class="text-xs text-zinc-500 mt-0.5">Modify your article and update its information.</p>
+                </div>
 
+                <!-- Card Body -->
+                <div class="p-6">
                     @if ($errors->any())
-                        <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-red-800">Please correct the following errors:
-                                    </h3>
-                                    <ul class="mt-2 list-disc list-inside text-sm text-red-700">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
+                        <div class="mb-6 flex gap-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                            <svg class="h-4 w-4 mt-0.5 shrink-0 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <ul class="space-y-1 list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('posts.update', $post) }}" class="space-y-6">
+                    <form method="POST" action="{{ route('posts.update', $post) }}" class="space-y-5">
                         @csrf
                         @method('PUT')
 
-                        <div>
-                            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                            <div class="mt-1">
-                                <input type="text" name="title" id="title"
-                                    value="{{ old('title', $post->title) }}" required
-                                    class="block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                            </div>
+                        <!-- Title -->
+                        <div class="space-y-1.5">
+                            <x-input-label for="title" value="Title" />
+                            <x-text-input type="text" name="title" id="title"
+                                value="{{ old('title', $post->title) }}" class="w-full" required />
                             @error('title')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                <p class="text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <div>
-                            <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
-                            <div class="mt-1">
-                                <select name="category_id" id="category_id" required
-                                    class="block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50 sm:text-sm">
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <!-- Category -->
+                        <div class="space-y-1.5">
+                            <x-input-label for="category_id" value="Category" />
+                            <select name="category_id" id="category_id" required
+                                class="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                             @error('category_id')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                <p class="text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <div>
-                            <label for="text" class="block text-sm font-medium text-gray-700">Content</label>
-                            <div class="mt-1">
-                                <textarea name="text" id="text" rows="8" required
-                                    class="block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('text', $post->text) }}</textarea>
-                            </div>
+                        <!-- Content -->
+                        <div class="space-y-1.5">
+                            <x-input-label for="text" value="Content" />
+                            <textarea name="text" id="text" rows="8" required
+                                class="flex w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">{{ old('text', $post->text) }}</textarea>
                             @error('text')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                <p class="text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-100">
+                        <!-- Form Actions -->
+                        <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100">
                             <a href="{{ route('posts.index') }}"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-xs hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                class="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 transition-colors">
                                 Cancel
                             </a>
-                            <button type="submit"
-                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-hidden focus:border-indigo-950 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-xs">
+                            <x-primary-button>
                                 Save Changes
-                            </button>
+                            </x-primary-button>
                         </div>
                     </form>
                 </div>

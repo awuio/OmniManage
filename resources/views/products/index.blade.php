@@ -1,23 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="text-base font-semibold text-zinc-900 leading-tight">
             {{ __('Products') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <!-- Statistics Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Category Filter -->
-                <div
-                    class="bg-white overflow-hidden shadow-xs sm:rounded-lg p-5 border border-gray-100 flex flex-col justify-between">
-                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Filter Category</span>
-                    <div class="mt-2">
+                <div class="bg-white border border-zinc-200 rounded-lg p-4 flex flex-col justify-between">
+                    <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Filter by Category</span>
+                    <div class="mt-3">
                         <form method="GET" action="{{ route('products.index') }}">
                             <select name="category_id" onchange="this.form.submit()"
-                                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5 pl-3 pr-10">
+                                class="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">
                                 <option value="">All Categories</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
@@ -31,150 +30,148 @@
                 </div>
 
                 <!-- Total Products -->
-                <div
-                    class="bg-white overflow-hidden shadow-xs sm:rounded-lg p-5 border border-gray-100 flex flex-col justify-between">
-                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Products</span>
-                    <span class="text-3xl font-bold text-gray-900 mt-2">{{ number_format($totalProductsCount) }}</span>
+                <div class="bg-white border border-zinc-200 rounded-lg p-4 flex flex-col justify-between">
+                    <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total Products</span>
+                    <span class="text-3xl font-bold text-zinc-900 mt-2">{{ number_format($totalProductsCount) }}</span>
                 </div>
 
                 <!-- Total Quantity -->
-                <div
-                    class="bg-white overflow-hidden shadow-xs sm:rounded-lg p-5 border border-gray-100 flex flex-col justify-between">
-                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Quantity</span>
-                    <span class="text-3xl font-bold text-gray-900 mt-2">{{ number_format($totalQuantitySum) }}</span>
+                <div class="bg-white border border-zinc-200 rounded-lg p-4 flex flex-col justify-between">
+                    <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total Quantity</span>
+                    <span class="text-3xl font-bold text-zinc-900 mt-2">{{ number_format($totalQuantitySum) }}</span>
                 </div>
 
-                <!-- Total Price/Revenue -->
-                <div
-                    class="bg-white overflow-hidden shadow-xs sm:rounded-lg p-5 border border-gray-100 flex flex-col justify-between bg-gradient-to-br from-indigo-50 to-white">
-                    <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Total Stock
-                        Value</span>
-                    <span class="text-3xl font-bold text-indigo-900 mt-2">
+                <!-- Total Stock Value -->
+                <div class="bg-white border border-zinc-200 rounded-lg p-4 flex flex-col justify-between">
+                    <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total Stock Value</span>
+                    <span class="text-3xl font-bold text-zinc-900 mt-2">
                         {{ number_format($totalStockValueSum) }}
                     </span>
                 </div>
             </div>
 
             <!-- Products List Card -->
-            <div class="bg-white overflow-hidden shadow-xs sm:rounded-lg border border-gray-100">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 class="text-lg font-medium text-gray-900">Manage Products</h3>
-                            <p class="text-sm text-gray-500 mt-1">Add, update, or remove physical items in your
-                                inventory.</p>
-                        </div>
-                        <a href="{{ route('products.create') }}"
-                            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-hidden focus:border-indigo-950 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-xs">
-                            <svg class="w-4.5 h-4.5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
-                            </svg>
-                            Add new product
-                        </a>
+            <div class="bg-white border border-zinc-200 rounded-lg">
+                <!-- Card Header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
+                    <div>
+                        <h3 class="text-sm font-semibold text-zinc-900">Manage Products</h3>
+                        <p class="text-xs text-zinc-500 mt-0.5">Add, update, or remove physical items in your inventory.</p>
                     </div>
+                    <a href="{{ route('products.create') }}"
+                        class="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-700 transition-colors duration-150">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+                        </svg>
+                        Add product
+                    </a>
+                </div>
 
-                    <div class="overflow-x-auto border border-gray-200 sm:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Image
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Name
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Category
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Price (Baht)
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Quantity
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Updated At
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @forelse ($products as $product)
-                                    <tr class="hover:bg-gray-50 transition duration-150">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            @if ($product->image)
-                                                <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image"
-                                                    class="w-36 h-36 object-cover rounded-md border border-gray-200 shadow-xs">
-                                            @else
-                                                <div
-                                                    class="w-12 h-12 rounded-md bg-gray-100 flex items-center justify-center text-xs text-gray-400 font-semibold border border-dashed border-gray-300">
-                                                    N/A
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {{ $product->name }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                {{ $product->category->name }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            {{ number_format($product->price, 2) }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ number_format($product->quantity) }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $product->updated_at ? $product->updated_at->format('d M Y') : 'N/A' }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div class="inline-flex space-x-2">
-                                                <a href="{{ route('products.edit', $product) }}"
-                                                    class="text-indigo-600 hover:text-indigo-900 hover:underline px-3 py-1 rounded-md hover:bg-indigo-50 transition">
-                                                    Edit
-                                                </a>
-                                                <form action="{{ route('products.destroy', $product) }}" method="post"
-                                                    class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        onclick="return confirm('Are you sure you want to delete this product?')"
-                                                        class="text-red-600 hover:text-red-900 hover:underline px-3 py-1 rounded-md hover:bg-red-50 transition border-none bg-transparent cursor-pointer font-medium">
-                                                        Delete
-                                                    </button>
-                                                </form>
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-zinc-200">
+                        <thead>
+                            <tr class="bg-zinc-50">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                    Image
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                    Name
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                    Category
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                    Price (Baht)
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                    Quantity
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                    Updated At
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-zinc-100">
+                            @forelse ($products as $product)
+                                <tr class="hover:bg-zinc-50 transition duration-100">
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-zinc-500">
+                                        @if ($product->image)
+                                            <img src="{{ str_starts_with($product->image, 'http') ? $product->image : Storage::url($product->image) }}"
+                                                alt="Product Image"
+                                                class="w-14 h-14 object-cover rounded-md border border-zinc-200">
+                                        @else
+                                            <div
+                                                class="w-14 h-14 rounded-md bg-zinc-50 flex items-center justify-center text-xs font-semibold text-zinc-400 border border-dashed border-zinc-200">
+                                                N/A
                                             </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-500">
-                                            No products found. Click "Add new product" to build your catalog!
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-zinc-900">
+                                        {{ $product->name }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm">
+                                        <span
+                                            class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-zinc-100 text-zinc-700">
+                                            {{ $product->category->name }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-zinc-900">
+                                        {{ number_format($product->price, 2) }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-zinc-500">
+                                        {{ number_format($product->quantity) }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-zinc-500">
+                                        {{ $product->updated_at ? $product->updated_at->format('d M Y') : 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="inline-flex items-center gap-1">
+                                            <a href="{{ route('products.edit', $product) }}"
+                                                class="inline-flex items-center h-7 px-2.5 rounded-md text-xs font-medium border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 transition-colors">
+                                                Edit
+                                            </a>
+                                            <form action="{{ route('products.destroy', $product) }}" method="post"
+                                                class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    onclick="return confirm('Are you sure you want to delete this product?')"
+                                                    class="inline-flex items-center h-7 px-2.5 rounded-md text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 border border-transparent hover:border-red-200 transition-colors">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="px-6 py-12 text-center text-sm text-zinc-400">
+                                        No products found. Click "Add product" to build your catalog!
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
 
-                    <!-- Pagination Links -->
-                    <div class="mt-6">
+                <!-- Pagination -->
+                @if ($products->hasPages())
+                    <div class="px-6 py-4 border-t border-zinc-200">
                         {{ $products->links() }}
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>

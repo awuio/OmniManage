@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Product;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -15,16 +14,20 @@ class DashboardController extends Controller
     public function __invoke()
     {
         $categoriesCount = Category::count();
-        $productsCount = Product::count();
         $postsCount = Post::count();
 
-        $totalStockValue = Product::sum(DB::raw('price * quantity'));
+        // Compile all product aggregate statistics into a single query to prevent database overload and reduce query count
+        $productStats = Product::selectRaw('
+            COUNT(*) as total_count,
+            SUM(price * quantity) as total_value,
+            SUM(CASE WHEN quantity = 0 THEN 1 ELSE 0 END) as out_of_stock,
+            SUM(CASE WHEN quantity BETWEEN 1 AND 5 THEN 1 ELSE 0 END) as low_stock
+        ')->first();
 
-        // Count products that are out of stock
-        $outOfStockCount = Product::where('quantity', 0)->count();
-
-        // Count products with low stock (1-5 units)
-        $lowStockCount = Product::whereBetween('quantity', [1, 5])->count();
+        $productsCount = $productStats->total_count ?? 0;
+        $totalStockValue = $productStats->total_value ?? 0;
+        $outOfStockCount = $productStats->out_of_stock ?? 0;
+        $lowStockCount = $productStats->low_stock ?? 0;
 
         // Top 5 most viewed products
         $topProducts = Product::orderBy('views', 'desc')->take(5)->get();
