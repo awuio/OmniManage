@@ -19,7 +19,7 @@
                                 <article class="pt-6 first:pt-0 pb-6 last:pb-0 flex flex-col sm:flex-row gap-6">
                                     @if ($product->image)
                                         <a href="{{ route('shop.show', $product) }}" class="shrink-0 group">
-                                            <img src="{{ str_starts_with($product->image, 'http') ? $product->image : Storage::url($product->image) }}"
+                                            <img src="{{ $product->image_url }}"
                                                 alt="{{ $product->name }}"
                                                 class="w-full sm:w-36 h-36 object-cover rounded-lg border border-zinc-200 transition duration-300 group-hover:scale-[1.02] group-hover:shadow-sm">
                                         </a>

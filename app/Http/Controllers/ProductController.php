@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -81,9 +82,13 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($uploadedImage);
             }
 
+            Log::error('Product Creation Failed: ' . $e->getMessage(), [
+                'request_data' => $request->except('image')
+            ]);
+
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูลสินค้า: '.$e->getMessage());
+                ->with('error', 'เกิดข้อผิดพลาดจากระบบ ไม่สามารถบันทึกข้อมูลสินค้าได้ กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแลระบบ');
         }
     }
 
@@ -139,9 +144,14 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($newImageUploaded);
             }
 
+            Log::error('Product Update Failed: ' . $e->getMessage(), [
+                'product_id' => $product->id,
+                'request_data' => $request->except('image')
+            ]);
+
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'เกิดข้อผิดพลาดในการอัปเดตข้อมูลสินค้า: '.$e->getMessage());
+                ->with('error', 'เกิดข้อผิดพลาดจากระบบ ไม่สามารถอัปเดตข้อมูลสินค้าได้ กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแลระบบ');
         }
     }
 
@@ -150,9 +160,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
+        // For soft deletes, we DO NOT delete the image from disk.
+        // It should remain accessible if the product is restored or for reporting purposes.
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'ลบสินค้าสำเร็จเรียบร้อยแล้ว');

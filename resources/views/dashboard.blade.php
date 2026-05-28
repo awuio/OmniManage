@@ -198,7 +198,7 @@
 
                                     {{-- Thumbnail --}}
                                     @if ($item->image)
-                                        <img src="{{ str_starts_with($item->image, 'http') ? $item->image : Storage::url($item->image) }}"
+                                        <img src="{{ $item->image_url }}"
                                             alt="{{ $item->name }}"
                                             class="h-10 w-10 shrink-0 rounded-lg border border-zinc-200 object-cover bg-zinc-50">
                                     @else
@@ -336,7 +336,7 @@
                             @foreach ($recentProducts as $product)
                                 <li class="group/item flex items-center gap-4 px-6 py-4 hover:bg-zinc-50/50 transition-colors">
                                     @if ($product->image)
-                                        <img src="{{ str_starts_with($product->image, 'http') ? $product->image : Storage::url($product->image) }}"
+                                        <img src="{{ $product->image_url }}"
                                             alt="{{ $product->name }}"
                                             class="h-10 w-10 shrink-0 rounded-lg border border-zinc-200 object-cover bg-zinc-50">
                                     @else

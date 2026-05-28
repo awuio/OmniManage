@@ -23,7 +23,7 @@
                         <!-- Left Column: Premium Image Frame -->
                         <div class="relative group rounded-xl overflow-hidden border border-zinc-200 bg-zinc-50 shadow-inner aspect-[4/3] md:aspect-square flex items-center justify-center">
                             @if ($product->image)
-                                <img src="{{ str_starts_with($product->image, 'http') ? $product->image : Storage::url($product->image) }}"
+                                <img src="{{ $product->image_url }}"
                                     alt="{{ $product->name }}"
                                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02] bg-zinc-50">
                             @else
@@ -187,7 +187,7 @@
                                         <a href="{{ route('shop.show', $related) }}"
                                             class="relative aspect-square overflow-hidden bg-zinc-50 block">
                                             @if ($related->image)
-                                                <img src="{{ str_starts_with($related->image, 'http') ? $related->image : Storage::url($related->image) }}"
+                                                <img src="{{ $related->image_url }}"
                                                     alt="{{ $related->name }}"
                                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02] bg-zinc-50">
                                             @else

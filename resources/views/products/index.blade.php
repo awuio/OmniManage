@@ -58,18 +58,16 @@
                         <h3 class="text-sm font-semibold text-zinc-900">Manage Products</h3>
                         <p class="text-xs text-zinc-500 mt-0.5">Add, update, or remove physical items in your inventory.</p>
                     </div>
-                    <a href="{{ route('products.create') }}"
-                        class="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-700 transition-colors duration-150">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
+                    <x-primary-button href="{{ route('products.create') }}" class="h-8 px-3 text-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
                         </svg>
                         Add product
-                    </a>
+                    </x-primary-button>
                 </div>
 
                 <!-- Table -->
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto" x-data="{ deleteProductId: null, deleteProductName: '' }">
                     <table class="min-w-full divide-y divide-zinc-200">
                         <thead>
                             <tr class="bg-zinc-50">
@@ -108,7 +106,7 @@
                                 <tr class="hover:bg-zinc-50 transition duration-100">
                                     <td class="px-6 py-3 whitespace-nowrap text-sm text-zinc-500">
                                         @if ($product->image)
-                                            <img src="{{ str_starts_with($product->image, 'http') ? $product->image : Storage::url($product->image) }}"
+                                            <img src="{{ $product->image_url }}"
                                                 alt="Product Image"
                                                 class="w-14 h-14 object-cover rounded-md border border-zinc-200">
                                         @else
@@ -138,20 +136,13 @@
                                     </td>
                                     <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="inline-flex items-center gap-1">
-                                            <a href="{{ route('products.edit', $product) }}"
-                                                class="inline-flex items-center h-7 px-2.5 rounded-md text-xs font-medium border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 transition-colors">
+                                            <x-secondary-button href="{{ route('products.edit', $product) }}" class="h-7 px-2.5 text-xs">
                                                 Edit
-                                            </a>
-                                            <form action="{{ route('products.destroy', $product) }}" method="post"
-                                                class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    onclick="return confirm('Are you sure you want to delete this product?')"
-                                                    class="inline-flex items-center h-7 px-2.5 rounded-md text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 border border-transparent hover:border-red-200 transition-colors">
-                                                    Delete
-                                                </button>
-                                            </form>
+                                            </x-secondary-button>
+                                            <x-danger-button type="button" class="h-7 px-2.5 text-xs"
+                                                x-on:click.prevent="deleteProductId = {{ $product->id }}; deleteProductName = '{{ addslashes($product->name) }}'; $dispatch('open-modal', 'confirm-product-deletion')">
+                                                Delete
+                                            </x-danger-button>
                                         </div>
                                     </td>
                                 </tr>
@@ -164,6 +155,27 @@
                             @endforelse
                         </tbody>
                     </table>
+
+                    <x-modal name="confirm-product-deletion" focusable maxWidth="sm">
+                        <form method="post" x-bind:action="'{{ route('products.destroy', 'PRODUCT_ID') }}'.replace('PRODUCT_ID', deleteProductId)" class="p-6">
+                            @csrf
+                            @method('DELETE')
+                            <h2 class="text-lg font-medium text-zinc-900">
+                                Confirm Deletion
+                            </h2>
+                            <p class="mt-2 text-sm text-zinc-600">
+                                Are you sure you want to delete product: <strong class="text-zinc-900" x-text="deleteProductName"></strong>?
+                            </p>
+                            <div class="mt-6 flex justify-end gap-3">
+                                <x-secondary-button type="button" x-on:click="$dispatch('close')">
+                                    Cancel
+                                </x-secondary-button>
+                                <x-danger-button>
+                                    Delete Product
+                                </x-danger-button>
+                            </div>
+                        </form>
+                    </x-modal>
                 </div>
 
                 <!-- Pagination -->

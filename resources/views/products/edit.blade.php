@@ -92,7 +92,7 @@
 
                             @if ($product->image)
                                 <div class="flex items-center gap-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
-                                    <img src="{{ str_starts_with($product->image, 'http') ? $product->image : Storage::url($product->image) }}"
+                                    <img src="{{ $product->image_url }}"
                                         alt="Current Product Image"
                                         class="w-16 h-16 object-cover rounded-md border border-zinc-200">
                                     <span class="text-xs text-zinc-500">Current image — upload a new one to replace</span>
