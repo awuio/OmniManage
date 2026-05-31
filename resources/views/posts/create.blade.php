@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-2 text-sm text-zinc-500">
-            <a href="{{ route('posts.index') }}" class="hover:text-zinc-900 transition-colors">Posts</a>
+            <a href="{{ route('posts.index') }}" class="hover:text-zinc-900 transition-colors">{{ __('messages.nav_blog') }}</a>
             <span>/</span>
-            <span class="text-zinc-900 font-medium">New Post</span>
+            <span class="text-zinc-900 font-medium">{{ __('messages.title_add_post') }}</span>
         </div>
     </x-slot>
 
@@ -12,8 +12,8 @@
             <div class="bg-white border border-zinc-200 rounded-lg">
                 <!-- Card Header -->
                 <div class="px-6 py-4 border-b border-zinc-200">
-                    <h3 class="text-sm font-semibold text-zinc-900">สร้างบทความใหม่</h3>
-                    <p class="text-xs text-zinc-500 mt-0.5">เขียนและเผยแพร่บทความสำหรับผู้อ่าน</p>
+                    <h3 class="text-sm font-semibold text-zinc-900">{{ __('messages.title_add_post') }}</h3>
+                    <p class="text-xs text-zinc-500 mt-0.5">{{ __('messages.desc_add_post') }}</p>
                 </div>
 
                 <!-- Card Body -->
@@ -38,9 +38,9 @@
 
                         <!-- Title -->
                         <div class="space-y-1.5">
-                            <x-input-label for="title" value="หัวเรื่อง" />
+                            <x-input-label for="title" :value="__('messages.label_title')" />
                             <x-text-input type="text" name="title" id="title" value="{{ old('title') }}"
-                                placeholder="ชื่อหัวเรื่องที่ดึงดูดความสนใจ..." autofocus class="w-full" />
+                                placeholder="{{ __('messages.placeholder_title') }}" autofocus class="w-full" />
                             @error('title')
                                 <p class="text-xs text-red-600">{{ $message }}</p>
                             @enderror
@@ -48,11 +48,11 @@
 
                         <!-- Category -->
                         <div class="space-y-1.5">
-                            <x-input-label for="category_id" value="หมวดหมู่" />
+                            <x-input-label for="category_id" :value="__('messages.label_category')" />
                             <select name="category_id" id="category_id"
                                 class="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">
                                 <option value="" disabled {{ old('category_id') ? '' : 'selected' }}>
-                                    -- เลือกหมวดหมู่ --
+                                    {{ __('messages.select_category') }}
                                 </option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
@@ -66,18 +66,18 @@
                             @enderror
                             @if ($categories->isEmpty())
                                 <p class="text-xs text-amber-600">
-                                    ยังไม่มีหมวดหมู่ —
+                                    {{ __('messages.no_categories_warning') }}
                                     <a href="{{ route('categories.create') }}"
-                                        class="font-semibold underline hover:text-amber-800">สร้างหมวดหมู่ใหม่</a>
+                                        class="font-semibold underline hover:text-amber-800">{{ __('messages.create_category_link') }}</a>
                                 </p>
                             @endif
                         </div>
 
                         <!-- Content -->
                         <div class="space-y-1.5">
-                            <x-input-label for="text" value="เนื้อหา" />
+                            <x-input-label for="text" :value="__('messages.label_content')" />
                             <textarea name="text" id="text" rows="10"
-                                placeholder="เขียนเนื้อหาบทความของคุณที่นี่..."
+                                placeholder="{{ __('messages.placeholder_content') }}"
                                 class="flex w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">{{ old('text') }}</textarea>
                             @error('text')
                                 <p class="text-xs text-red-600">{{ $message }}</p>
@@ -88,10 +88,10 @@
                         <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100">
                             <a href="{{ route('posts.index') }}"
                                 class="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 transition-colors">
-                                ยกเลิก
+                                {{ __('messages.btn_cancel') }}
                             </a>
                             <x-primary-button>
-                                เผยแพร่บทความ
+                                {{ __('messages.btn_publish_post') }}
                             </x-primary-button>
                         </div>
                     </form>

@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-2 text-sm text-zinc-500">
-            <a href="{{ route('categories.index') }}" class="hover:text-zinc-900 transition-colors">Categories</a>
+            <a href="{{ route('categories.index') }}" class="hover:text-zinc-900 transition-colors">{{ __('messages.nav_categories') }}</a>
             <span>/</span>
-            <span class="text-zinc-900 font-medium">New Category</span>
+            <span class="text-zinc-900 font-medium">{{ __('messages.title_add_category') }}</span>
         </div>
     </x-slot>
 
@@ -12,8 +12,8 @@
             <div class="bg-white border border-zinc-200 rounded-lg">
                 <!-- Card Header -->
                 <div class="px-6 py-4 border-b border-zinc-200">
-                    <h3 class="text-sm font-semibold text-zinc-900">สร้างหมวดหมู่ใหม่</h3>
-                    <p class="text-xs text-zinc-500 mt-0.5">เพิ่มหมวดหมู่สำหรับจัดกลุ่มสินค้าและบทความ</p>
+                    <h3 class="text-sm font-semibold text-zinc-900">{{ __('messages.title_add_category') }}</h3>
+                    <p class="text-xs text-zinc-500 mt-0.5">{{ __('messages.desc_add_category') }}</p>
                 </div>
 
                 <!-- Card Body -->
@@ -38,23 +38,23 @@
 
                         <!-- Category Name -->
                         <div class="space-y-1.5">
-                            <x-input-label for="name" value="ชื่อหมวดหมู่" />
+                            <x-input-label for="name" :value="__('messages.label_category_name')" />
                             <x-text-input type="text" name="name" id="name" value="{{ old('name') }}"
-                                placeholder="เช่น อิเล็กทรอนิกส์, เสื้อผ้า, อาหาร..." autofocus class="w-full" />
+                                placeholder="{{ __('messages.placeholder_category_name') }}" autofocus class="w-full" />
                             @error('name')
                                 <p class="text-xs text-red-600">{{ $message }}</p>
                             @enderror
-                            <p class="text-xs text-zinc-400">ชื่อหมวดหมู่จะถูกใช้เพื่อจัดกลุ่มสินค้าและบทความ</p>
+                            <p class="text-xs text-zinc-400">{{ __('messages.hint_category_name') }}</p>
                         </div>
 
                         <!-- Form Actions -->
                         <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100">
                             <a href="{{ route('categories.index') }}"
                                 class="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 transition-colors">
-                                ยกเลิก
+                                {{ __('messages.btn_cancel') }}
                             </a>
                             <x-primary-button>
-                                บันทึกหมวดหมู่
+                                {{ __('messages.btn_save_category') }}
                             </x-primary-button>
                         </div>
                     </form>

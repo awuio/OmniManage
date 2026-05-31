@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -12,6 +13,14 @@ use Illuminate\Support\Facades\Hash;
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
+
+    /**
+     * Helper to generate post content.
+     */
+    private function generatePostContent(string $category): string
+    {
+        return "Welcome to our latest update regarding {$category}. We are thrilled to share the newest advancements and tips to get the most out of your devices. Whether you are a long-time fan or just getting started, there's always something new to discover in the world of {$category}. Stay tuned for more in-depth reviews and guides.";
+    }
 
     /**
      * Helper to generate extremely long, realistic product marketing copy.
@@ -191,6 +200,17 @@ class DatabaseSeeder extends Seeder
                         'category_id' => $category->id,
                         'image' => 'https://placehold.co/600x400/png',
                         'description' => $this->generateDescription($prod['name'], $categoryName, $prod['specs']),
+                    ]
+                );
+            }
+
+            // Create 2 Posts for this Category
+            for ($i = 1; $i <= 2; $i++) {
+                Post::updateOrCreate(
+                    ['title' => "Top 5 features of the new {$categoryName} lineup - Part {$i}"],
+                    [
+                        'text' => $this->generatePostContent($categoryName),
+                        'category_id' => $category->id,
                     ]
                 );
             }

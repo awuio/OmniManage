@@ -60,7 +60,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         // ตรวจสอบว่ามีสินค้าหรือโพสต์ที่เชื่อมโยงกับหมวดหมู่นี้อยู่หรือไม่
-        if ($category->products()->exists() || $category->posts()->exists()) {
+        if ($category->products()->withTrashed()->exists() || $category->posts()->withTrashed()->exists()) {
             return redirect()->back()->with('error', __('messages.category_delete_error'));
         }
 

@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-2 text-sm text-zinc-500">
-            <a href="{{ route('products.index') }}" class="hover:text-zinc-900 transition-colors">Products</a>
+            <a href="{{ route('products.index') }}" class="hover:text-zinc-900 transition-colors">{{ __('messages.nav_products') }}</a>
             <span>/</span>
-            <span class="text-zinc-900 font-medium">Edit Product</span>
+            <span class="text-zinc-900 font-medium">{{ __('messages.title_edit_product') }}</span>
         </div>
     </x-slot>
 
@@ -12,8 +12,8 @@
             <div class="bg-white border border-zinc-200 rounded-lg">
                 <!-- Card Header -->
                 <div class="px-6 py-4 border-b border-zinc-200">
-                    <h3 class="text-sm font-semibold text-zinc-900">Edit Product</h3>
-                    <p class="text-xs text-zinc-500 mt-0.5">Modify details for this item in your inventory catalog.</p>
+                    <h3 class="text-sm font-semibold text-zinc-900">{{ __('messages.title_edit_product') }}</h3>
+                    <p class="text-xs text-zinc-500 mt-0.5">{{ __('messages.desc_edit_product') }}</p>
                 </div>
 
                 <!-- Card Body -->
@@ -40,7 +40,7 @@
 
                         <!-- Name -->
                         <div class="space-y-1.5">
-                            <x-input-label for="name" value="Product Name" />
+                            <x-input-label for="name" :value="__('messages.label_product_name')" />
                             <x-text-input type="text" name="name" id="name"
                                 value="{{ old('name', $product->name) }}" class="w-full" required />
                             @error('name')
@@ -50,7 +50,7 @@
 
                         <!-- Category -->
                         <div class="space-y-1.5">
-                            <x-input-label for="category_id" value="Category" />
+                            <x-input-label for="category_id" :value="__('messages.label_category')" />
                             <select name="category_id" id="category_id" required
                                 class="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">
                                 @foreach ($categories as $category)
@@ -68,7 +68,7 @@
                         <!-- Price & Quantity -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
-                                <x-input-label for="price" value="Price (Baht)" />
+                                <x-input-label for="price" :value="__('messages.label_price')" />
                                 <x-text-input type="number" step="0.01" min="0" name="price" id="price"
                                     value="{{ old('price', $product->price) }}" class="w-full" required />
                                 @error('price')
@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="space-y-1.5">
-                                <x-input-label for="quantity" value="Quantity" />
+                                <x-input-label for="quantity" :value="__('messages.label_quantity')" />
                                 <x-text-input type="number" min="0" name="quantity" id="quantity"
                                     value="{{ old('quantity', $product->quantity) }}" class="w-full" required />
                                 @error('quantity')
@@ -88,14 +88,14 @@
 
                         <!-- Image Upload & Preview -->
                         <div class="space-y-1.5">
-                            <x-input-label for="image" value="Product Image" />
+                            <x-input-label for="image" :value="__('messages.label_product_image')" />
 
                             @if ($product->image)
                                 <div class="flex items-center gap-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
                                     <img src="{{ $product->image_url }}"
                                         alt="Current Product Image"
                                         class="w-16 h-16 object-cover rounded-md border border-zinc-200">
-                                    <span class="text-xs text-zinc-500">Current image — upload a new one to replace</span>
+                                    <span class="text-xs text-zinc-500">{{ __('messages.current_image_hint') }}</span>
                                 </div>
                             @endif
 
@@ -108,7 +108,7 @@
 
                         <!-- Description -->
                         <div class="space-y-1.5">
-                            <x-input-label for="description" value="Description" />
+                            <x-input-label for="description" :value="__('messages.label_description')" />
                             <textarea name="description" id="description" rows="4"
                                 class="flex w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">{{ old('description', $product->description) }}</textarea>
                             @error('description')
@@ -120,10 +120,10 @@
                         <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100">
                             <a href="{{ route('products.index') }}"
                                 class="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 transition-colors">
-                                Cancel
+                                {{ __('messages.btn_cancel') }}
                             </a>
                             <x-primary-button>
-                                Save Changes
+                                {{ __('messages.btn_save_changes') }}
                             </x-primary-button>
                         </div>
                     </form>

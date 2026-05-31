@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-base font-semibold text-zinc-900 leading-tight">
-            {{ __('Categories') }}
+            {{ __('messages.nav_categories') }}
         </h2>
     </x-slot>
 
@@ -11,15 +11,15 @@
                 <!-- Card Header -->
                 <div class="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
                     <div>
-                        <h3 class="text-sm font-semibold text-zinc-900">Manage Categories</h3>
-                        <p class="text-xs text-zinc-500 mt-0.5">Add, update, or remove categories from your system.</p>
+                        <h3 class="text-sm font-semibold text-zinc-900">{{ __('messages.title_manage_categories') }}</h3>
+                        <p class="text-xs text-zinc-500 mt-0.5">{{ __('messages.desc_manage_categories') }}</p>
                     </div>
                     <x-primary-button href="{{ route('categories.create') }}" class="h-8 px-3 text-xs">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
                         </svg>
-                        Add category
+                        {{ __('messages.btn_add_category') }}
                     </x-primary-button>
                 </div>
 
@@ -30,15 +30,15 @@
                             <tr class="bg-zinc-50">
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                                    ID
+                                    {{ __('messages.table_id') }}
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                                    Name
+                                    {{ __('messages.table_name') }}
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                                    Actions
+                                    {{ __('messages.table_actions') }}
                                 </th>
                             </tr>
                         </thead>
@@ -55,11 +55,11 @@
                                         <div class="inline-flex items-center gap-1">
                                             <x-secondary-button href="{{ route('categories.edit', $category) }}"
                                                 class="h-7 px-2.5 text-xs">
-                                                Edit
+                                                {{ __('messages.btn_edit') }}
                                             </x-secondary-button>
                                             <x-danger-button type="button" variant="link" class="h-7 px-2.5 text-xs"
                                                 x-on:click.prevent="deleteCategoryId = {{ $category->id }}; deleteCategoryName = {{ Js::from($category->name) }}; $dispatch('open-modal', 'confirm-category-deletion')">
-                                                Delete
+                                                {{ __('messages.btn_delete') }}
                                             </x-danger-button>
                                         </div>
                                     </td>
@@ -67,7 +67,7 @@
                             @empty
                                 <tr>
                                     <td colspan="3" class="px-6 py-12 text-center text-sm text-zinc-400">
-                                        No categories found. Click "Add category" to get started!
+                                        {{ __('messages.empty_categories') }}
                                     </td>
                                 </tr>
                             @endforelse
@@ -88,18 +88,18 @@
                         @csrf
                         @method('DELETE')
                         <h2 class="text-lg font-medium text-zinc-900">
-                            Confirm Deletion
+                            {{ __('messages.title_confirm_delete') }}
                         </h2>
                         <p class="mt-2 text-sm text-zinc-600">
-                            Are you sure you want to delete category: <strong class="text-zinc-900"
+                            {{ __('messages.desc_confirm_delete_category') }} <strong class="text-zinc-900"
                                 x-text="deleteCategoryName"></strong>?
                         </p>
                         <div class="mt-6 flex justify-end gap-3">
                             <x-secondary-button type="button" x-on:click="$dispatch('close')">
-                                Cancel
+                                {{ __('messages.btn_cancel') }}
                             </x-secondary-button>
                             <x-danger-button>
-                                Delete Category
+                                {{ __('messages.btn_delete_category') }}
                             </x-danger-button>
                         </div>
                     </form>

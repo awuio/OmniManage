@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-2 text-sm text-zinc-500">
-            <a href="{{ route('categories.index') }}" class="hover:text-zinc-900 transition-colors">Categories</a>
+            <a href="{{ route('categories.index') }}" class="hover:text-zinc-900 transition-colors">{{ __('messages.nav_categories') }}</a>
             <span>/</span>
-            <span class="text-zinc-900 font-medium">Edit Category</span>
+            <span class="text-zinc-900 font-medium">{{ __('messages.title_edit_category') }}</span>
         </div>
     </x-slot>
 
@@ -12,9 +12,8 @@
             <div class="bg-white border border-zinc-200 rounded-lg">
                 <!-- Card Header -->
                 <div class="px-6 py-4 border-b border-zinc-200">
-                    <h3 class="text-sm font-semibold text-zinc-900">Edit Category</h3>
-                    <p class="text-xs text-zinc-500 mt-0.5">Update the name of the category. This will update the
-                        category name across all associated posts and products.</p>
+                    <h3 class="text-sm font-semibold text-zinc-900">{{ __('messages.title_edit_category') }}</h3>
+                    <p class="text-xs text-zinc-500 mt-0.5">{{ __('messages.desc_edit_category') }}</p>
                 </div>
 
                 <!-- Card Body -->
@@ -40,7 +39,7 @@
 
                         <!-- Category Name -->
                         <div class="space-y-1.5">
-                            <x-input-label for="name" value="Category Name" />
+                            <x-input-label for="name" :value="__('messages.label_category_name')" />
                             <x-text-input type="text" name="name" id="name"
                                 value="{{ old('name', $category->name) }}" class="w-full" required />
                             @error('name')
@@ -52,10 +51,10 @@
                         <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100">
                             <a href="{{ route('categories.index') }}"
                                 class="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 transition-colors">
-                                Cancel
+                                {{ __('messages.btn_cancel') }}
                             </a>
                             <x-primary-button>
-                                Save Changes
+                                {{ __('messages.btn_save_changes') }}
                             </x-primary-button>
                         </div>
                     </form>

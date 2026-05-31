@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-2 text-sm text-zinc-500">
-            <a href="{{ route('products.index') }}" class="hover:text-zinc-900 transition-colors">Products</a>
+            <a href="{{ route('products.index') }}" class="hover:text-zinc-900 transition-colors">{{ __('messages.nav_products') }}</a>
             <span>/</span>
-            <span class="text-zinc-900 font-medium">New Product</span>
+            <span class="text-zinc-900 font-medium">{{ __('messages.title_add_product') }}</span>
         </div>
     </x-slot>
 
@@ -12,8 +12,8 @@
             <div class="bg-white border border-zinc-200 rounded-lg">
                 <!-- Card Header -->
                 <div class="px-6 py-4 border-b border-zinc-200">
-                    <h3 class="text-sm font-semibold text-zinc-900">Add New Product</h3>
-                    <p class="text-xs text-zinc-500 mt-0.5">Create a new item in your inventory catalog.</p>
+                    <h3 class="text-sm font-semibold text-zinc-900">{{ __('messages.title_add_product') }}</h3>
+                    <p class="text-xs text-zinc-500 mt-0.5">{{ __('messages.desc_add_product') }}</p>
                 </div>
 
                 <!-- Card Body -->
@@ -39,9 +39,9 @@
 
                         <!-- Name -->
                         <div class="space-y-1.5">
-                            <x-input-label for="name" value="Product Name" />
+                            <x-input-label for="name" :value="__('messages.label_product_name')" />
                             <x-text-input type="text" name="name" id="name" value="{{ old('name') }}"
-                                placeholder="e.g. Wireless Headset" class="w-full" required />
+                                placeholder="{{ __('messages.placeholder_product_name') }}" class="w-full" required />
                             @error('name')
                                 <p class="text-xs text-red-600">{{ $message }}</p>
                             @enderror
@@ -49,10 +49,10 @@
 
                         <!-- Category -->
                         <div class="space-y-1.5">
-                            <x-input-label for="category_id" value="Category" />
+                            <x-input-label for="category_id" :value="__('messages.label_category')" />
                             <select name="category_id" id="category_id" required
                                 class="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">
-                                <option value="" disabled selected>Select a category</option>
+                                <option value="" disabled selected>{{ __('messages.select_category') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
                                         {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -68,18 +68,18 @@
                         <!-- Price & Quantity -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
-                                <x-input-label for="price" value="Price (Baht)" />
+                                <x-input-label for="price" :value="__('messages.label_price')" />
                                 <x-text-input type="number" step="0.01" min="0" name="price" id="price"
-                                    value="{{ old('price') }}" placeholder="0.00" class="w-full" required />
+                                    value="{{ old('price') }}" placeholder="{{ __('messages.placeholder_price') }}" class="w-full" required />
                                 @error('price')
                                     <p class="text-xs text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="space-y-1.5">
-                                <x-input-label for="quantity" value="Quantity" />
+                                <x-input-label for="quantity" :value="__('messages.label_quantity')" />
                                 <x-text-input type="number" min="0" name="quantity" id="quantity"
-                                    value="{{ old('quantity') }}" placeholder="0" class="w-full" required />
+                                    value="{{ old('quantity') }}" placeholder="{{ __('messages.placeholder_quantity') }}" class="w-full" required />
                                 @error('quantity')
                                     <p class="text-xs text-red-600">{{ $message }}</p>
                                 @enderror
@@ -88,7 +88,7 @@
 
                         <!-- Image Upload -->
                         <div class="space-y-1.5">
-                            <x-input-label for="image" value="Product Image" />
+                            <x-input-label for="image" :value="__('messages.label_product_image')" />
                             <input type="file" name="image" id="image" accept="image/*"
                                 class="flex w-full rounded-md border border-zinc-300 bg-white text-sm text-zinc-500 shadow-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-l-md file:border-0 file:border-r file:border-zinc-300 file:text-xs file:font-medium file:bg-zinc-50 file:text-zinc-700 hover:file:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400">
                             @error('image')
@@ -98,9 +98,9 @@
 
                         <!-- Description -->
                         <div class="space-y-1.5">
-                            <x-input-label for="description" value="Description" />
+                            <x-input-label for="description" :value="__('messages.label_description')" />
                             <textarea name="description" id="description" rows="4"
-                                placeholder="Enter product description..."
+                                placeholder="{{ __('messages.placeholder_description') }}"
                                 class="flex w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="text-xs text-red-600">{{ $message }}</p>
@@ -111,10 +111,10 @@
                         <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100">
                             <a href="{{ route('products.index') }}"
                                 class="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 transition-colors">
-                                Cancel
+                                {{ __('messages.btn_cancel') }}
                             </a>
                             <x-primary-button>
-                                Save Product
+                                {{ __('messages.btn_save_product') }}
                             </x-primary-button>
                         </div>
                     </form>
