@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Support\Facades\Cache;
 
 class BlogController extends Controller
 {
     public function index(\Illuminate\Http\Request $request)
     {
         // Load categories with count of their posts to display in the sidebar
-        $categories = Category::withCount('posts')->get();
+        $categories = Cache::remember('blog_categories_with_count', 300, function () {
+            return Category::withCount('posts')->get();
+        });
 
         // Eager load category relation to prevent N+1 queries when rendering the category name badge
         $posts = Post::with('category')
@@ -30,7 +33,9 @@ class BlogController extends Controller
     public function show(Post $post)
     {
         // Load categories with count of their posts to keep sidebar counters consistent
-        $categories = Category::withCount('posts')->get();
+        $categories = Cache::remember('blog_categories_with_count', 300, function () {
+            return Category::withCount('posts')->get();
+        });
 
         $post->load('category');
 

@@ -79,3 +79,47 @@ test('post creation fails with invalid category_id', function () {
 
     $response->assertSessionHasErrors(['category_id']);
 });
+
+test('non-admin cannot create a post', function () {
+    $category = \App\Models\Category::factory()->create();
+
+    $response = $this->actingAs($this->user)->post(route('posts.store'), [
+        'title' => 'Unauthorized Post',
+        'text' => 'Some content.',
+        'category_id' => $category->id,
+    ]);
+
+    $response->assertStatus(403);
+});
+
+test('non-admin cannot update a post', function () {
+    $post = Post::factory()->create(['title' => 'Old Title']);
+
+    $response = $this->actingAs($this->user)->put(route('posts.update', $post), [
+        'title' => 'New Title Attempt',
+        'text' => $post->text,
+        'category_id' => $post->category_id,
+    ]);
+
+    $response->assertStatus(403);
+});
+
+test('non-admin cannot delete a post', function () {
+    $post = Post::factory()->create();
+
+    $response = $this->actingAs($this->user)->delete(route('posts.destroy', $post));
+
+    $response->assertStatus(403);
+});
+
+test('post update fails with invalid category_id', function () {
+    $post = Post::factory()->create();
+
+    $response = $this->actingAs($this->admin)->put(route('posts.update', $post), [
+        'title' => 'Updated Title',
+        'text' => 'Some updated text',
+        'category_id' => 99999, // Non-existent ID
+    ]);
+
+    $response->assertSessionHasErrors(['category_id']);
+});

@@ -10,10 +10,12 @@ return [
     'category_updated' => 'Category data successfully updated.',
     'category_deleted' => 'Category successfully deleted.',
     'category_delete_error' => 'Cannot delete this category because it is still linked to existing products or posts.',
+    'category_error' => 'A system error occurred. Could not process category data. Please try again or contact the administrator.',
 
     'post_created' => 'Post successfully created.',
     'post_updated' => 'Post successfully updated.',
     'post_deleted' => 'Post successfully deleted.',
+    'post_error' => 'A system error occurred. Could not process post data. Please try again or contact the administrator.',
 
     // Navigation
     'nav_home' => 'Home',

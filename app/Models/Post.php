@@ -18,6 +18,21 @@ class Post extends Model
     ];
 
     /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        $clearCache = function () {
+            \Illuminate\Support\Facades\Cache::forget('dashboard_posts_count');
+            \Illuminate\Support\Facades\Cache::forget('blog_categories_with_count');
+        };
+
+        static::saved($clearCache);
+        static::deleted($clearCache);
+        static::restored($clearCache);
+    }
+
+    /**
      * Get the category that owns the post.
      */
     public function category(): BelongsTo

@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Services\CategoryServiceInterface;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
+    public function __construct(
+        protected CategoryServiceInterface $categoryService
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -31,9 +37,16 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        Category::create($request->validated());
+        try {
+            $this->categoryService->createCategory($request->validated());
 
-        return redirect()->route('categories.index')->with('success', __('messages.category_created'));
+            return redirect()->route('categories.index')->with('success', __('messages.category_created'));
+        } catch (\Exception $e) {
+            Log::error('Category Creation Failed: ' . $e->getMessage(), [
+                'request_data' => $request->validated()
+            ]);
+            return redirect()->back()->withInput()->with('error', __('messages.category_error') ?? 'Error creating category.');
+        }
     }
 
     /**
@@ -49,9 +62,17 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category->update($request->validated());
+        try {
+            $this->categoryService->updateCategory($category, $request->validated());
 
-        return redirect()->route('categories.index')->with('success', __('messages.category_updated'));
+            return redirect()->route('categories.index')->with('success', __('messages.category_updated'));
+        } catch (\Exception $e) {
+            Log::error('Category Update Failed: ' . $e->getMessage(), [
+                'category_id' => $category->id,
+                'request_data' => $request->validated()
+            ]);
+            return redirect()->back()->withInput()->with('error', __('messages.category_error') ?? 'Error updating category.');
+        }
     }
 
     /**
@@ -59,13 +80,22 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        // Check if there are any products or posts associated with this category
-        if ($category->products()->withTrashed()->exists() || $category->posts()->withTrashed()->exists()) {
-            return redirect()->back()->with('error', __('messages.category_delete_error'));
+        Gate::authorize('delete', $category);
+
+        try {
+            // Check if there are any products or posts associated with this category
+            if ($category->products()->withTrashed()->exists() || $category->posts()->withTrashed()->exists()) {
+                return redirect()->back()->with('error', __('messages.category_delete_error'));
+            }
+
+            $category->delete();
+
+            return redirect()->route('categories.index')->with('success', __('messages.category_deleted'));
+        } catch (\Exception $e) {
+            Log::error('Category Deletion Failed: ' . $e->getMessage(), [
+                'category_id' => $category->id
+            ]);
+            return redirect()->back()->with('error', __('messages.category_error') ?? 'Error deleting category.');
         }
-
-        $category->delete();
-
-        return redirect()->route('categories.index')->with('success', __('messages.category_deleted'));
     }
 }

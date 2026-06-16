@@ -29,7 +29,7 @@ test('non-admin cannot view products index', function () {
 
 test('admin can create a new product with image', function () {
     $category = Category::factory()->create();
-    $image = UploadedFile::fake()->image('product.jpg');
+    $image = UploadedFile::fake()->create('product.jpg', 100);
 
     $response = $this->actingAs($this->admin)->post(route('products.store'), [
         'name' => 'Test Product',
@@ -65,7 +65,7 @@ test('admin can update a product and replace its image', function () {
     // Simulate old image exists
     Storage::disk('public')->put('products/old_image.jpg', 'fake content');
 
-    $newImage = UploadedFile::fake()->image('new_product.jpg');
+    $newImage = UploadedFile::fake()->create('new_product.jpg', 100);
 
     $response = $this->actingAs($this->admin)->put(route('products.update', $product), [
         'name' => 'Updated Product Name',

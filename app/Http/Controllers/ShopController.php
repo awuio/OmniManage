@@ -37,7 +37,11 @@ class ShopController extends Controller
     // Display details for a single product
     public function show(Product $product)
     {
-        $product->incrementViews();
+        $sessionKey = 'viewed_product_' . $product->id;
+        if (!session()->has($sessionKey)) {
+            $product->incrementViews();
+            session()->put($sessionKey, true);
+        }
 
         $product->load('category');
 

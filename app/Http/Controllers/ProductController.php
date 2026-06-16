@@ -6,14 +6,15 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
-use App\Services\ProductService;
+use App\Contracts\Services\ProductServiceInterface;
+use App\DataTransferObjects\ProductData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
     public function __construct(
-        protected ProductService $productService
+        protected ProductServiceInterface $productService
     ) {}
 
     /**
@@ -68,7 +69,8 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         try {
-            $this->productService->createProduct($request->validated(), $request->file('image'));
+            $productData = ProductData::fromArray($request->validated());
+            $this->productService->createProduct($productData, $request->file('image'));
 
             return redirect()->route('products.index')->with('success', __('messages.product_created'));
         } catch (\Exception $e) {
@@ -106,7 +108,8 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         try {
-            $this->productService->updateProduct($product, $request->validated(), $request->file('image'));
+            $productData = ProductData::fromArray($request->validated());
+            $this->productService->updateProduct($product, $productData, $request->file('image'));
 
             return redirect()->route('products.index')->with('success', __('messages.product_updated'));
         } catch (\Exception $e) {

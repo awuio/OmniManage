@@ -43,7 +43,7 @@ class Product extends Model
 
     /**
      * Increment the view counter safely, bypassing mass assignment entirely.
-     * Uses a raw SQL UPDATE to avoid race conditions.
+     * Uses Eloquent's atomic increment to prevent race conditions.
      */
     public function incrementViews(): void
     {

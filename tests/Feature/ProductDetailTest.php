@@ -30,7 +30,7 @@ test('product detail page can be rendered', function () {
     $response->assertSee('1 views'); // Views incremented from 0 to 1
 });
 
-test('product views count increments on every visit', function () {
+test('product views count increments once per session to prevent spam', function () {
     $category = Category::create(['name' => 'Fashion']);
 
     $product = Product::create([
@@ -45,7 +45,14 @@ test('product views count increments on every visit', function () {
     $this->actingAs($this->user)->get(route('shop.show', $product));
     expect($product->fresh()->views)->toBe(1);
 
-    // 2nd visit
+    // 2nd visit in the same session - should not increment
+    $this->actingAs($this->user)->get(route('shop.show', $product));
+    expect($product->fresh()->views)->toBe(1);
+
+    // Flush session to simulate a new session
+    session()->flush();
+
+    // 3rd visit (new session) - should increment
     $this->actingAs($this->user)->get(route('shop.show', $product));
     expect($product->fresh()->views)->toBe(2);
 });

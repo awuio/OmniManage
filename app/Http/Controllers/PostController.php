@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -25,9 +26,16 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        Post::create($request->validated());
+        try {
+            Post::create($request->validated());
 
-        return redirect()->route('posts.index')->with('success', __('messages.post_created'));
+            return redirect()->route('posts.index')->with('success', __('messages.post_created'));
+        } catch (\Exception $e) {
+            Log::error('Post Creation Failed: ' . $e->getMessage(), [
+                'request_data' => $request->validated()
+            ]);
+            return redirect()->back()->withInput()->with('error', __('messages.post_error') ?? 'Error creating post.');
+        }
     }
 
     public function show(Post $post)
@@ -45,11 +53,19 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post)
     {
-        // When execution reaches this point, it means the data has passed validation from UpdatePostRequest 100%
-        // Use $request->validated() to retrieve only the data defined in the rules() for updating
-        $post->update($request->validated());
+        try {
+            // When execution reaches this point, it means the data has passed validation from UpdatePostRequest 100%
+            // Use $request->validated() to retrieve only the data defined in the rules() for updating
+            $post->update($request->validated());
 
-        return redirect()->route('posts.index')->with('success', __('messages.post_updated'));
+            return redirect()->route('posts.index')->with('success', __('messages.post_updated'));
+        } catch (\Exception $e) {
+            Log::error('Post Update Failed: ' . $e->getMessage(), [
+                'post_id' => $post->id,
+                'request_data' => $request->validated()
+            ]);
+            return redirect()->back()->withInput()->with('error', __('messages.post_error') ?? 'Error updating post.');
+        }
     }
 
     public function destroy(Post $post)

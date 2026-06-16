@@ -18,7 +18,14 @@ Route::get('/lang/{locale}', function ($locale) {
         session()->put('locale', $locale);
     }
 
-    return redirect()->back();
+    $referer = request()->headers->get('referer');
+    $allowedHost = request()->getSchemeAndHttpHost();
+
+    if ($referer && str_starts_with($referer, $allowedHost)) {
+        return redirect()->to($referer);
+    }
+
+    return redirect()->to('/');
 })->name('lang.switch');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');

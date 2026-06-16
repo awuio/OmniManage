@@ -21,6 +21,8 @@ class Category extends Model
         $clearCache = function () {
             \Illuminate\Support\Facades\Cache::forget('categories_all');
             \Illuminate\Support\Facades\Cache::forget('dashboard_products_by_category');
+            \Illuminate\Support\Facades\Cache::forget('dashboard_categories_count');
+            \Illuminate\Support\Facades\Cache::forget('blog_categories_with_count');
         };
 
         static::saved($clearCache);
@@ -30,6 +32,8 @@ class Category extends Model
 
     /**
      * Retrieve all categories from the cache, or database if cache is empty.
+     * Note: rememberForever is chosen because categories are small and rarely change.
+     * The cache is automatically cleared when a category is saved, deleted, or restored.
      */
     public static function getCachedAll()
     {

@@ -14,8 +14,12 @@ class DashboardController extends Controller
      */
     public function __invoke()
     {
-        $categoriesCount = Category::count();
-        $postsCount = Post::count();
+        $categoriesCount = Cache::remember('dashboard_categories_count', 300, function () {
+            return Category::count();
+        });
+        $postsCount = Cache::remember('dashboard_posts_count', 300, function () {
+            return Post::count();
+        });
 
         // Compile all product aggregate statistics into a single query to prevent database overload and reduce query count
         $productStats = Cache::remember('dashboard_product_stats', 300, function () {
