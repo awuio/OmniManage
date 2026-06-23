@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Rules\Turnstile;
 
 class LoginRequest extends FormRequest
 {
@@ -29,6 +30,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'cf-turnstile-response' => ['required', new Turnstile],
         ];
     }
 
@@ -86,6 +88,7 @@ class LoginRequest extends FormRequest
             'email.required' => 'กรุณากรอกอีเมลเพื่อเข้าสู่ระบบ',
             'email.email' => 'รูปแบบอีเมลไม่ถูกต้อง',
             'password.required' => 'กรุณากรอกรหัสผ่านของคุณ',
+            'cf-turnstile-response.required' => 'กรุณายืนยันว่าคุณไม่ใช่บอท',
         ];
     }
 }

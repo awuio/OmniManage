@@ -67,6 +67,13 @@
             <x-input-error :messages="$errors->get('password')" class="mt-1" />
         </div>
 
+        <!-- Cloudflare Turnstile -->
+        <div class="space-y-1.5 flex flex-col items-center">
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.key') }}" data-theme="light"></div>
+            <x-input-error :messages="$errors->get('cf-turnstile-response')" class="mt-1 w-full text-center" />
+        </div>
+
         <!-- Remember Me -->
         <div class="flex items-center gap-2">
             <input id="remember_me" type="checkbox"

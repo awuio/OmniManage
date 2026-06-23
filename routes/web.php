@@ -21,6 +21,7 @@ Route::get('/lang/{locale}', function ($locale) {
     $referer = request()->headers->get('referer');
     $allowedHost = request()->getSchemeAndHttpHost();
 
+    // Prevent Open Redirect vulnerability
     if ($referer && str_starts_with($referer, $allowedHost)) {
         return redirect()->to($referer);
     }
@@ -38,14 +39,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::middleware(IsAdminMiddleware::class)->group(function () {
-        Route::resource('categories', CategoryController::class);
-        Route::resource('posts', PostController::class);
-        Route::resource('products', ProductController::class);
-
+    Route::middleware(['permission:view dashboard'])->group(function () {
         Route::get('/dashboard', \App\Http\Controllers\DashboardController::class)
             ->middleware(['verified'])
             ->name('dashboard');
+    });
+
+    Route::middleware(['permission:manage products'])->group(function () {
+        Route::resource('categories', CategoryController::class);
+        Route::resource('posts', PostController::class);
+        Route::resource('products', ProductController::class);
     });
 });
 
