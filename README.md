@@ -1,14 +1,16 @@
-# OmniManage
+# BanneeManage
 
-OmniManage is a robust, modern, and scalable Laravel 12.x application built to manage Categories, Products, and Blog Posts. It features a premium, responsive UI powered by **Tailwind CSS v4** and **Alpine.js**, along with enterprise-level backend practices including Soft Deletes, automated Garbage Collection, and secure Error Logging.
+BanneeManage is a robust, modern, and scalable Laravel 12.x application built to manage Categories, Products, and Blog Posts. It features a premium, responsive UI powered by **Tailwind CSS v4** and **Alpine.js**, along with enterprise-level backend practices including Soft Deletes, automated Garbage Collection, and secure Error Logging.
 
 ## 🚀 Key Features
 
 - **Modern Tech Stack:** Laravel 12.x, PHP 8.2+, Tailwind CSS v4, and Alpine.js.
 - **Complete CRUD Systems:** Manage Categories, Products (with image uploads), and Posts.
+- **Internationalization (i18n):** Full dual-language support (English / Thai) with session persistence.
+- **High-Performance Pagination:** Implements Cursor-based (Keyset) Pagination globally with dynamic limits for massive scalability.
 - **Soft Deletes & Data Recovery:** Accidental deletions can be recovered. Data integrity is maintained.
-- **Automated Garbage Collection:** Includes a scheduled background task (`CleanDeletedProducts`) to automatically clean up orphaned product images 30 days after deletion, saving disk space.
-- **Premium Frontend Architecture:** Clean, component-based Blade architecture (`<x-primary-button>`, `<x-modal>`, etc.) eliminating Tailwind class duplication.
+- **Automated Garbage Collection:** Includes a scheduled background task (`CleanDeletedProducts`) to automatically clean up orphaned product images 30 days after deletion.
+- **Premium Frontend Architecture:** Clean, minimalist Shadcn-inspired Light UI with component-based Blade architecture eliminating Tailwind class duplication.
 - **Security & Performance:** N+1 Query prevention, secure logging mechanisms, and defensive programming against soft-deleted relations.
 
 ---

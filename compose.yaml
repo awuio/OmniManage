@@ -10,7 +10,6 @@ services:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -18,14 +17,29 @@ services:
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
-            - '.:/var/www/html'
+            - '.:/var/www/html:cached'
         networks:
             - sail
+        restart: unless-stopped
+        mem_limit: 1g
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "3"
         depends_on:
-            - mysql
-            - redis
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
     mysql:
-        image: 'mysql/mysql-server:8.0'
+        # Changed from deprecated 'mysql/mysql-server:8.0' to official image
+        image: 'mysql:8.0'
+        command: >
+            --innodb-buffer-pool-size=128M
+            --performance-schema=OFF
+            --max-connections=50
+            --table-open-cache=256
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
@@ -41,29 +55,79 @@ services:
             - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sail
+        restart: unless-stopped
+        mem_limit: 512m
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "3"
         healthcheck:
             test:
                 - CMD
                 - mysqladmin
                 - ping
                 - '-p${DB_PASSWORD}'
+            interval: 5s
             retries: 3
             timeout: 5s
+            start_period: 30s
     redis:
         image: 'redis:alpine'
+        command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
             - 'sail-redis:/data'
         networks:
             - sail
+        restart: unless-stopped
+        mem_limit: 128m
+        logging:
+            driver: json-file
+            options:
+                max-size: "5m"
+                max-file: "3"
         healthcheck:
             test:
                 - CMD
                 - redis-cli
                 - ping
+            interval: 5s
             retries: 3
             timeout: 5s
+    vite:
+        build:
+            context: './vendor/laravel/sail/runtimes/8.4'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: 'sail-8.4/app'
+        command: 'npm run dev'
+        ports:
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+        volumes:
+            - '.:/var/www/html:cached'
+        networks:
+            - sail
+        restart: unless-stopped
+        depends_on:
+            - laravel.test
+    phpmyadmin:
+        image: 'phpmyadmin/phpmyadmin'
+        ports:
+            - 8080:80
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: '${DB_USERNAME}'
+            PMA_PASSWORD: '${DB_PASSWORD}'
+        networks:
+            - sail
+        depends_on:
+            mysql:
+                condition: service_healthy
 networks:
     sail:
         driver: bridge
