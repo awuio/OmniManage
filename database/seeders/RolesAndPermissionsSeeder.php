@@ -30,10 +30,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $roleEditor->syncPermissions(['view dashboard', 'manage products']);
 
         $roleAdmin = Role::firstOrCreate(['name' => 'super-admin']);
-        $roleAdmin->syncPermissions(Permission::all());
         
         // Assign super-admin to the first user
-        $user = \App\Models\User::first();
+        $user = \App\Models\User::where('email', 'admin@example.com')->first();
         if ($user) {
             $user->assignRole('super-admin');
         }

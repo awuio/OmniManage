@@ -16,10 +16,12 @@
                         {{ __('messages.nav_shop') }}
                     </x-nav-link>
 
-                    @if (Auth::user()?->is_admin)
+                    @can('view dashboard')
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('messages.nav_dashboard') }}
                         </x-nav-link>
+                    @endcan
+                    @can('manage products')
                         <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
                             {{ __('messages.nav_products') }}
                         </x-nav-link>
@@ -29,7 +31,7 @@
                         <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')">
                             {{ __('messages.nav_blog') }}
                         </x-nav-link>
-                    @endif
+                    @endcan
                 </div>
             </div>
 
@@ -125,10 +127,12 @@
             </x-responsive-nav-link>
 
             <!-- Admin only menu on mobile -->
-            @if (Auth::user()?->is_admin)
+            @can('view dashboard')
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('messages.nav_dashboard') }}
                 </x-responsive-nav-link>
+            @endcan
+            @can('manage products')
                 <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
                     {{ __('messages.nav_products') }}
                 </x-responsive-nav-link>
@@ -139,7 +143,7 @@
                 <x-responsive-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')">
                     {{ __('messages.nav_blog') }}
                 </x-responsive-nav-link>
-            @endif
+            @endcan
         </div>
 
         @auth

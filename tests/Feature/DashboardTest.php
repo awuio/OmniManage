@@ -4,8 +4,9 @@ use App\Models\User;
 
 
 beforeEach(function () {
-    $this->admin = User::factory()->create(['is_admin' => true]);
-    $this->user = User::factory()->create(['is_admin' => false]);
+    $this->admin = User::factory()->create();
+    $this->admin->assignRole(\Spatie\Permission\Models\Role::firstOrCreate(['name' => 'super-admin']));
+    $this->user = User::factory()->create();
 });
 
 test('admin can view dashboard', function () {

@@ -80,8 +80,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        Gate::authorize('delete', $category);
-
         try {
             // Check if there are any products or posts associated with this category
             if ($category->products()->withTrashed()->exists() || $category->posts()->withTrashed()->exists()) {
