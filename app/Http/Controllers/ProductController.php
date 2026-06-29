@@ -31,6 +31,14 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', $searchTerm)
+                  ->orWhere('description', 'like', $searchTerm);
+            });
+        }
+
         // Clone the builder before running aggregates so each call
         // gets a clean query without carrying over previous state.
         // withoutEagerLoads() prevents the cloned with('category') from firing

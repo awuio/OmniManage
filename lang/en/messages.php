@@ -77,6 +77,8 @@ return [
     'desc_confirm_delete_product' => 'Are you sure you want to delete product:',
     'btn_delete_product' => 'Delete Product',
     'filter_category' => 'Filter by Category',
+    'filters' => 'Search & Filters',
+    'search' => 'Search products...',
     'all_categories' => 'All Categories',
     'total_products' => 'Total Products',
     'total_quantity' => 'Total Quantity',

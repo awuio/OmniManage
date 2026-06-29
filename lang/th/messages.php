@@ -77,6 +77,8 @@ return [
     'desc_confirm_delete_product' => 'คุณแน่ใจหรือไม่ว่าต้องการลบสินค้า:',
     'btn_delete_product' => 'ลบสินค้า',
     'filter_category' => 'กรองตามหมวดหมู่',
+    'filters' => 'ค้นหาและตัวกรอง',
+    'search' => 'ค้นหาสินค้า...',
     'all_categories' => 'ทุกหมวดหมู่',
     'total_products' => 'สินค้าทั้งหมด',
     'total_quantity' => 'จำนวนทั้งหมด',

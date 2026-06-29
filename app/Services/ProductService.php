@@ -27,7 +27,7 @@ class ProductService implements ProductServiceInterface
 
             if ($image) {
                 // Store the uploaded image first
-                $uploadedImage = $image->store('products', 'public');
+                $uploadedImage = $image->store('products');
                 $productAttributes['image'] = $uploadedImage;
             }
 
@@ -41,7 +41,7 @@ class ProductService implements ProductServiceInterface
 
             // Clean up the uploaded image from disk storage if database record creation fails
             if ($uploadedImage) {
-                Storage::disk('public')->delete($uploadedImage);
+                Storage::delete($uploadedImage);
             }
 
             throw $e;
@@ -68,7 +68,7 @@ class ProductService implements ProductServiceInterface
 
             if ($image) {
                 // Upload new image first, but do not delete old one yet (database integrity)
-                $newImageUploaded = $image->store('products', 'public');
+                $newImageUploaded = $image->store('products');
                 $productAttributes['image'] = $newImageUploaded;
             }
 
@@ -79,7 +79,7 @@ class ProductService implements ProductServiceInterface
 
             // If database update succeeds, delete old image to free disk space
             if ($newImageUploaded && $oldImage) {
-                Storage::disk('public')->delete($oldImage);
+                Storage::delete($oldImage);
             }
 
             return $lockedProduct;
@@ -88,7 +88,7 @@ class ProductService implements ProductServiceInterface
 
             // Clean up the new uploaded image from disk storage if database update fails
             if ($newImageUploaded) {
-                Storage::disk('public')->delete($newImageUploaded);
+                Storage::delete($newImageUploaded);
             }
 
             throw $e;

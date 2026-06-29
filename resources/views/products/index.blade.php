@@ -10,11 +10,11 @@
 
             <!-- Statistics Cards Grid -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Category Filter -->
+                <!-- Filters and Search -->
                 <div class="bg-white border border-zinc-200 rounded-lg p-4 flex flex-col justify-between">
-                    <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">{{ __('messages.filter_category') }}</span>
+                    <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">{{ __('messages.filters') }}</span>
                     <div class="mt-3">
-                        <form method="GET" action="{{ route('products.index') }}">
+                        <form method="GET" action="{{ route('products.index') }}" class="flex flex-col gap-2">
                             <select name="category_id" onchange="this.form.submit()"
                                 class="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">
                                 <option value="">{{ __('messages.all_categories') }}</option>
@@ -25,6 +25,15 @@
                                     </option>
                                 @endforeach
                             </select>
+                            
+                            <div class="relative w-full">
+                                <input type="text" name="search" value="{{ request('search') }}" 
+                                    placeholder="{{ __('messages.search') }}" 
+                                    class="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 pr-8 text-sm text-zinc-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400">
+                                <button type="submit" class="absolute inset-y-0 right-0 px-2.5 flex items-center text-zinc-400 hover:text-zinc-600">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
